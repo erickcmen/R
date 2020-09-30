@@ -47,7 +47,7 @@
 	library(RSelenium)
 	library(rvest)
 	#start RSelenium
-	driver<-rsDriver(port=4568L,browser="chrome",chromever="85.0.4183.83")
+	driver<-rsDriver(port=4569L,browser="chrome",chromever="85.0.4183.83")
 	remDr <- driver[["client"]]
 	#navigate to your page
 	remDr$navigate("https://www.wong.pe/abarrotes")
@@ -60,8 +60,9 @@
 	page_source<-remDr$getPageSource()
 	#parse it
 	a<-read_html(page_source[[1]]) %>% html_nodes(".product-item__info") %>% html_text()
-	write.csv(a,"productos.csv")
+	b<-gsub('[\r\n\t]','',a)
+	write.csv(b,"productos.csv")
 	```
 2. Output  
-	![](.img/output0.png)  
-	![](.img/output.png)  
+	![](.img/output2.png)  
+	![](.img/output3.png)  
