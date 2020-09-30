@@ -41,3 +41,27 @@
 	```
 2. Output
 	![](.img/datalaptop.png)
+## Scrolling
+1. codigo.R
+	```r
+	library(RSelenium)
+	library(rvest)
+	#start RSelenium
+	driver<-rsDriver(port=4568L,browser="chrome",chromever="85.0.4183.83")
+	remDr <- driver[["client"]]
+	#navigate to your page
+	remDr$navigate("https://www.wong.pe/abarrotes")
+	#scroll down 5 times, waiting for the page to load at each time
+	for(i in 1:60){
+	remDr$executeScript(paste("scroll(0,",i*10000,");"))
+	Sys.sleep(3)    
+	}
+	#get the page html
+	page_source<-remDr$getPageSource()
+	#parse it
+	a<-read_html(page_source[[1]]) %>% html_nodes(".product-item__info") %>% html_text()
+	write.csv(a,"productos.csv")
+	```
+2. Output  
+	![](.img/output0.png)  
+	![](.img/output.png)  
