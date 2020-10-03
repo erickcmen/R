@@ -68,7 +68,7 @@
 	![](.img/output3.png)  
 ## Paginación
 1. codigo.R
-	```
+	```r
 	library(rvest)
 	paginas<-paste0("https://www.amazon.es/s?k=caballo&page=",c(1:2),"&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&qid=1601617471&ref=sr_pg_",c(1:2))
 	linksPagina<-function(url){
