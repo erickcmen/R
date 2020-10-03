@@ -66,3 +66,54 @@
 2. Output  
 	![](.img/output2.png)  
 	![](.img/output3.png)  
+## Paginación
+1. codigo.R
+	```
+	library(rvest)
+	paginas<-paste0("https://www.amazon.es/s?k=caballo&page=",c(1:2),"&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&qid=1601617471&ref=sr_pg_",c(1:2))
+	linksPagina<-function(url){
+	#url<-"https://www.amazon.es/s?k=caballo&page=3&__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&qid=1601617471&ref=sr_pg_3"
+	pagina<-read_html(url)
+	selector<-"div > div > div:nth-child(3) > h2 > a"
+	nodo<-html_nodes(pagina,selector)
+	links<-html_attr(nodo,"href")
+	links<-paste0("https://amazon.es/",links)
+	}
+
+	datosProducto<-function(url){
+	#library(rvest)
+	#url<-"https://www.amazon.es/Happy-People-58980-importado-Alemania/dp/B003YGDCBQ/ref=sr_1_102?__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=caballo&qid=1601617471&sr=8-102"
+	pagina<-read_html(url)
+	#nombre
+	nombre<-"#productTitle"
+	nombre_nodo<-html_node(pagina,nombre)
+	nombre_texto<-html_text(nombre_nodo)
+	#precio
+	precio<-"#priceblock_ourprice"
+	precio_nodo<-html_node(pagina,precio)
+	precio_texto<-html_text(precio_nodo)
+	#valoracion
+	valoracion<-"#acrCustomerReviewText"
+	valoracion_nodo<-html_node(pagina,valoracion)
+	valoracion_texto<-html_text(valoracion_nodo)
+	#estrellas
+	estrellas<-"#acrPopover > span.a-declarative > a > i.a-icon.a-icon-star.a-star-4"
+	estrellas_nodo<-html_node(pagina,estrellas)
+	estrellas_texto<-html_text(estrellas_nodo)
+	producto<-c(nombre_texto,precio_texto,valoracion_texto,estrellas_texto)
+	producto
+	}
+
+	links<-sapply(paginas,linksPagina)
+	a<-as.vector(unlist(links))
+	datos<-sapply(a,datosProducto)
+	names(datos)<-NULL
+	b<-t(datos)
+	colnames(b)<-c("Nombre del producto","Precio","valoraciones","estrellas")
+	rownames(b)<-NULL
+	c<-gsub('[\n]','',b[,1])
+	d<-cbind(c,b[,2:4])
+	write.csv(d,"paginacion.csv")
+	```
+2. Output
+	![](.img/resultado.png)
